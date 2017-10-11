@@ -55,7 +55,7 @@ def main(website, period):
             if newmd5 != oldmd5 and oldmd5 != 0:
                 print("\033[5;30;42mA change has been observed at \033[5;30;43m" + website + "\033[0;30;46m (" + time.ctime() + ")\033[0m")
             else:
-                print("\033[0;31mThere are no changes has been observed at \033[1;33m" + website + " \033[0;36m(" + time.ctime() + ")\033[0m")
+                print("\033[0;31mThere is no change has been observed at \033[1;33m" + website + " \033[0;36m(" + time.ctime() + ")\033[0m")
 
             oldmd5 = newmd5
             time.sleep(period)

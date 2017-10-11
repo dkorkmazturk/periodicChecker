@@ -51,11 +51,12 @@ def main(website, period):
             temp_file, headers = urllib.request.urlretrieve(website)
             newmd5 = hashlib.md5(open(temp_file, 'rb').read()).hexdigest()
             os.remove(temp_file)
-        
-            if newmd5 != oldmd5 and oldmd5 != 0:
-                print("\033[5;30;42mA change has been observed at \033[5;30;43m" + website + "\033[0;30;46m (" + time.ctime() + ")\033[0m")
-            else:
-                print("\033[0;31mThere is no change has been observed at \033[1;33m" + website + " \033[0;36m(" + time.ctime() + ")\033[0m")
+            
+            if oldmd5 != 0:
+                if newmd5 != oldmd5:
+                    print("\033[5;30;42mA change has been observed at \033[5;30;43m" + website + "\033[0;30;46m (" + time.ctime() + ")\033[0m")
+                else:
+                    print("\033[0;31mThere is no change has been observed at \033[1;33m" + website + " \033[0;36m(" + time.ctime() + ")\033[0m")
 
             oldmd5 = newmd5
             time.sleep(period)

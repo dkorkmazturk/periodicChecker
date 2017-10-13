@@ -21,6 +21,24 @@ import urllib.request
 import hashlib
 import time
 
+#import smtplib
+#from email import message
+#
+#def sendInfoMail(website):
+#    SENDER = "sender_mail"
+#    RECEIVER = "receiver_mail"
+#
+#    msg = message.Message()
+#    msg.add_header('from', SENDER)
+#    msg.add_header('to', RECEIVER)
+#    msg.add_header('subject', 'A website that being tracked has been updated!')
+#    msg.set_payload('A change has been observed at ' + website + ' on ' + time.ctime() + '\n')
+#
+#    mailServer = smtplib.SMTP_SSL("smtp_server")
+#    mailServer.login(SENDER, "passwd")
+#    mailServer.send_message(msg, SENDER, RECEIVER)
+#    mailServer.quit()
+
 def processArgs(argv):
     try:
         website = argv[1]
@@ -34,17 +52,25 @@ def processArgs(argv):
         else:
             period = int(argv[2])
 
-        return website, period
+        if len(argv) > 3 and argv[3] == "-q":
+            quiet = True
+        else:
+            quiet = False
+
+        return website, period, quiet
 
     except IndexError:
-        print("Usage: periodicChecker.py <website> <period(s|m|h)>")
+        sys.stderr.write("USAGE: periodicChecker.py <website> <period(s|m|h)> (-q)")
         sys.exit(1)
     except ValueError:
-        print("Enter period in integer format. Example: 10s(same as just 10), 10m, 10h")
+        sys.stderr.write("ERROR: Enter period in integer format. Example: 10s(same as just 10), 10m, 10h")
         sys.exit(1)
 
-def main(website, period):
+def main(website, period, quiet):
     oldmd5 = 0
+
+    if quiet:
+        print("INFO: Quiet mode has activated. Only the observed changes are going to print message.")
 
     try:
         while(True):
@@ -55,7 +81,8 @@ def main(website, period):
             if oldmd5 != 0:
                 if newmd5 != oldmd5:
                     print("\033[5;30;42mA change has been observed at \033[5;30;43m" + website + "\033[0;30;46m (" + time.ctime() + ")\033[0m")
-                else:
+                    #sendInfoMail(website)
+                elif not quiet:
                     print("\033[0;31mThere is no change has been observed at \033[1;33m" + website + " \033[0;36m(" + time.ctime() + ")\033[0m")
 
             oldmd5 = newmd5
@@ -66,12 +93,11 @@ def main(website, period):
             os.remove(temp_file)
         sys.exit(0)
     except ValueError:
-        print("Invalid website: " + website)
+        sys.stderr.write("ERROR: Invalid website: " + website)
         sys.exit(1)
     except urllib.error.URLError:
-        print("Failed to connect to " + website)
+        sys.stderr.write("ERROR: Failed to connect to " + website)
         sys.exit(1)
 
 if __name__ == "__main__":
-    website, period = processArgs(sys.argv)
-    main(website, period)
+    main(*processArgs(sys.argv))

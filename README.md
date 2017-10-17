@@ -5,7 +5,7 @@
 * Python >= 3.2
 
 ## Usage
-periodicChecker.py <webpage> <period(s|m|h)> (-q)
+`periodicChecker.py <webpage> <period(s|m|h)> (-q)`
 
 ## Setting Up E-mail Notifications
 You have to uncomment *sendInfoMail* function and other helper lines and set necessary fields in order to get e-mail notifications when a change has determined. Sections needs to be uncommented specified with *# Uncomment this line for e-mail notifications* comments.

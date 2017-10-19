@@ -21,6 +21,8 @@ import urllib.request
 import hashlib
 import time
 
+## Uncomment and fill this section to activate e-mail notifications
+
 #import smtplib
 #from email import message
 #import concurrent.futures
@@ -71,7 +73,7 @@ def processArgs(argv):
 
 def main(website, period, quiet):
     oldmd5 = 0
-    #executor = concurrent.futures.ThreadPoolExecutor(max_workers=2)
+    #executor = concurrent.futures.ThreadPoolExecutor(max_workers=2) ## Uncomment this line to activate e-mail notifications
 
     if quiet:
         print("INFO: Quiet mode has activated. Only the observed changes are going to print message.")
@@ -85,7 +87,7 @@ def main(website, period, quiet):
             if oldmd5 != 0:
                 if newmd5 != oldmd5:
                     print("\033[5;30;42mA change has been observed at \033[5;30;43m" + website + "\033[0;30;46m (" + time.ctime() + ")\033[0m")
-                    #executor.submit(sendInfoMail, website)
+                    #executor.submit(sendInfoMail, website) ## Uncomment this line to activate e-mail notifications
                 elif not quiet:
                     print("\033[0;31mThere is no change has been observed at \033[1;33m" + website + " \033[0;36m(" + time.ctime() + ")\033[0m")
 
@@ -95,7 +97,7 @@ def main(website, period, quiet):
     except KeyboardInterrupt:
         if os.path.isfile(temp_file):
             os.remove(temp_file)
-        #executor.shutdown()
+        #executor.shutdown() ## Uncomment this line to activate e-mail notifications
         sys.exit(0)
     except ValueError:
         sys.stderr.write("ERROR: Invalid website: " + website)
